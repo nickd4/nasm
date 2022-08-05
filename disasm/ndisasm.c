@@ -268,6 +268,105 @@ int main(int argc, char **argv)
         }
     }
 
+#if 1 // for use with decode_8086.py
+    uint8_t data[INSN_MAX];
+    memset(data, 0, INSN_MAX);
+
+    printf("byte addressing modes\n");
+    for (int i = 0; i < 4; ++i) {
+        printf("mod %d\n", i);
+        for (int j = 0; j < 8; ++j) {
+            data[0] = 0x00;
+            data[1] = j | (i << 6);
+            data[2] = 0x34;
+            data[3] = 0x56;
+            data[4] = 0x78;
+            data[5] = 0x9a;
+            data[6] = 0xbc;
+            data[7] = 0xde;
+            lendis = disasm(
+                data,
+                INSN_MAX,
+                outbuf,
+                sizeof(outbuf),
+                bits,
+                offset,
+                autosync,
+                &prefer
+            );
+            if (lendis)
+                output_ins(offset, data, lendis, outbuf);
+            else
+                printf("illegal_opcode\n");
+        }
+        printf("\n");
+    }
+    printf("\n");
+
+    printf("word addressing modes\n");
+    for (int i = 0; i < 4; ++i) {
+        printf("mod %d\n", i);
+        for (int j = 0; j < 8; ++j) {
+            data[0] = 0x01;
+            data[1] = j | (i << 6);
+            data[2] = 0x34;
+            data[3] = 0x56;
+            data[4] = 0x78;
+            data[5] = 0x9a;
+            data[6] = 0xbc;
+            data[7] = 0xde;
+            lendis = disasm(
+                data,
+                INSN_MAX,
+                outbuf,
+                sizeof(outbuf),
+                bits,
+                offset,
+                autosync,
+                &prefer
+            );
+            if (lendis)
+                output_ins(offset, data, lendis, outbuf);
+            else
+                printf("illegal_opcode\n");
+        }
+        printf("\n");
+    }
+    printf("\n");
+
+    printf("opcodes\n");
+    for (int i = 0; i < 0x100; ++i) {
+        printf("opcode %02x\n", i);
+        for (int j = 0; j < 8; ++j) {
+            data[0] = i;
+            data[1] = 2 | (j << 3);
+            data[2] = 0x34;
+            data[3] = 0x56;
+            data[4] = 0x78;
+            data[5] = 0x9a;
+            data[6] = 0xbc;
+            data[7] = 0xde;
+            lendis = disasm(
+                data,
+                INSN_MAX,
+                outbuf,
+                sizeof(outbuf),
+                bits,
+                offset,
+                autosync,
+                &prefer
+            );
+            if (lendis)
+                output_ins(offset, data, lendis, outbuf);
+            else
+                printf("illegal_opcode\n");
+        }
+        printf("\n");
+    }
+    printf("\n");
+    return 0;
+#endif
+
     if (!filename) {
         fprintf(stderr, help, pname);
         return 0;
