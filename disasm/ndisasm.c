@@ -338,9 +338,14 @@ int main(int argc, char **argv)
         printf("opcodes\n");
         for (int i = 0; i < 0x100; ++i) {
             printf("opcode %02x\n", i);
-            for (int j = 0; j < 8; ++j) {
+            int end = 0x40, step = 8;
+            if ((i & 0xf8) == 0xd8) { // coprocessor
+                end = 0x100;
+                step = 1;
+            }
+            for (int j = 0; j < end; j += step) {
                 data[0] = i;
-                data[1] = 2 | (j << 3);
+                data[1] = j;
                 data[2] = 0x34;
                 data[3] = 0x56;
                 data[4] = 0x78;
