@@ -374,10 +374,10 @@ int main(int argc, char **argv)
         printf("opcodes 0f\n");
         for (int i = 0; i < 0x100; ++i) {
             printf("opcode 0f %02x\n", i);
-            for (int j = 0; j < 8; ++j) {
+            for (int j = 0; j < 0x40; j += 8) {
                 data[0] = 0x0f;
                 data[1] = i;
-                data[2] = 2 | (j << 3);
+                data[2] = j;
                 data[3] = 0x34;
                 data[4] = 0x56;
                 data[5] = 0x78;
