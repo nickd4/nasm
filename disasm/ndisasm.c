@@ -273,49 +273,78 @@ int main(int argc, char **argv)
         uint8_t data[INSN_MAX];
         memset(data, 0, INSN_MAX);
 
-        printf("byte addressing modes\n");
-        for (int i = 0; i < 4; ++i) {
-            printf("mod %d\n", i);
-            for (int j = 0; j < 8; ++j) {
-                data[0] = 0x00;
-                data[1] = j | (i << 6);
-                data[2] = 0x34;
-                data[3] = 0x56;
-                data[4] = 0x78;
-                data[5] = 0x9a;
-                data[6] = 0xbc;
-                data[7] = 0xde;
-                lendis = disasm(
-                    data,
-                    INSN_MAX,
-                    outbuf,
-                    sizeof(outbuf),
-                    bits,
-                    offset,
-                    autosync,
-                    &prefer
-                );
-                if (lendis)
-                    output_ins(offset, data, lendis, outbuf);
-                else
-                    printf("illegal_opcode\n");
-            }
-            printf("\n");
+        printf("addressing modes 00\n");
+        for (int i = 0; i < 0x20; ++i) {
+            data[0] = 0x00;
+            data[1] = (i & 7) | ((i & 0x18) << 3);
+            data[2] = 0x01;
+            data[3] = 0x23;
+            data[4] = 0x45;
+            data[5] = 0x67;
+            data[6] = 0x89;
+            data[7] = 0xab;
+            data[8] = 0xcd;
+            data[9] = 0xef;
+            lendis = disasm(
+                data,
+                INSN_MAX,
+                outbuf,
+                sizeof(outbuf),
+                bits,
+                offset,
+                autosync,
+                &prefer
+            );
+            if (lendis)
+                output_ins(offset, data, lendis, outbuf);
+            else
+                printf("illegal_opcode\n");
         }
         printf("\n");
 
-        printf("word addressing modes\n");
-        for (int i = 0; i < 4; ++i) {
-            printf("mod %d\n", i);
-            for (int j = 0; j < 8; ++j) {
-                data[0] = 0x01;
-                data[1] = j | (i << 6);
-                data[2] = 0x34;
-                data[3] = 0x56;
-                data[4] = 0x78;
-                data[5] = 0x9a;
-                data[6] = 0xbc;
-                data[7] = 0xde;
+        printf("addressing modes 01\n");
+        for (int i = 0; i < 0x20; ++i) {
+            data[0] = 0x01;
+            data[1] = (i & 7) | ((i & 0x18) << 3);
+            data[2] = 0x01;
+            data[3] = 0x23;
+            data[4] = 0x45;
+            data[5] = 0x67;
+            data[6] = 0x89;
+            data[7] = 0xab;
+            data[8] = 0xcd;
+            data[9] = 0xef;
+            lendis = disasm(
+                data,
+                INSN_MAX,
+                outbuf,
+                sizeof(outbuf),
+                bits,
+                offset,
+                autosync,
+                &prefer
+            );
+            if (lendis)
+                output_ins(offset, data, lendis, outbuf);
+            else
+                printf("illegal_opcode\n");
+        }
+        printf("\n");
+
+	if (bits == 32) {
+            printf("addressing modes 00 04\n");
+            for (int i = 0; i < 0x100; ++i) {
+                data[0] = 0x00;
+                data[1] = 0x04;
+                data[2] = i;
+                data[3] = 0x01;
+                data[4] = 0x23;
+                data[5] = 0x45;
+                data[6] = 0x67;
+                data[7] = 0x89;
+                data[8] = 0xab;
+                data[9] = 0xcd;
+                data[10] = 0xef;
                 lendis = disasm(
                     data,
                     INSN_MAX,
@@ -332,8 +361,67 @@ int main(int argc, char **argv)
                     printf("illegal_opcode\n");
             }
             printf("\n");
-        }
-        printf("\n");
+
+            printf("addressing modes 00 44\n");
+            for (int i = 0; i < 0x100; ++i) {
+                data[0] = 0x00;
+                data[1] = 0x44;
+                data[2] = i;
+                data[3] = 0x01;
+                data[4] = 0x23;
+                data[5] = 0x45;
+                data[6] = 0x67;
+                data[7] = 0x89;
+                data[8] = 0xab;
+                data[9] = 0xcd;
+                data[10] = 0xef;
+                lendis = disasm(
+                    data,
+                    INSN_MAX,
+                    outbuf,
+                    sizeof(outbuf),
+                    bits,
+                    offset,
+                    autosync,
+                    &prefer
+                );
+                if (lendis)
+                    output_ins(offset, data, lendis, outbuf);
+                else
+                    printf("illegal_opcode\n");
+            }
+            printf("\n");
+
+            printf("addressing modes 00 84\n");
+            for (int i = 0; i < 0x100; ++i) {
+                data[0] = 0x00;
+                data[1] = 0x84;
+                data[2] = i;
+                data[3] = 0x01;
+                data[4] = 0x23;
+                data[5] = 0x45;
+                data[6] = 0x67;
+                data[7] = 0x89;
+                data[8] = 0xab;
+                data[9] = 0xcd;
+                data[10] = 0xef;
+                lendis = disasm(
+                    data,
+                    INSN_MAX,
+                    outbuf,
+                    sizeof(outbuf),
+                    bits,
+                    offset,
+                    autosync,
+                    &prefer
+                );
+                if (lendis)
+                    output_ins(offset, data, lendis, outbuf);
+                else
+                    printf("illegal_opcode\n");
+            }
+            printf("\n");
+	}
 
         printf("opcodes\n");
         for (int i = 0; i < 0x100; ++i) {
@@ -346,12 +434,14 @@ int main(int argc, char **argv)
             for (int j = 0; j < end; j += step) {
                 data[0] = i;
                 data[1] = j;
-                data[2] = 0x34;
-                data[3] = 0x56;
-                data[4] = 0x78;
-                data[5] = 0x9a;
-                data[6] = 0xbc;
-                data[7] = 0xde;
+                data[2] = 0x01;
+                data[3] = 0x23;
+                data[4] = 0x45;
+                data[5] = 0x67;
+                data[6] = 0x89;
+                data[7] = 0xab;
+                data[8] = 0xcd;
+                data[9] = 0xef;
                 lendis = disasm(
                     data,
                     INSN_MAX,
@@ -378,11 +468,14 @@ int main(int argc, char **argv)
                 data[0] = 0x0f;
                 data[1] = i;
                 data[2] = j;
-                data[3] = 0x34;
-                data[4] = 0x56;
-                data[5] = 0x78;
-                data[6] = 0x9a;
-                data[7] = 0xbc;
+                data[3] = 0x01;
+                data[4] = 0x23;
+                data[5] = 0x45;
+                data[6] = 0x67;
+                data[7] = 0x89;
+                data[8] = 0xab;
+                data[9] = 0xcd;
+                data[10] = 0xef;
                 lendis = disasm(
                     data,
                     INSN_MAX,
